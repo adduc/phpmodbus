@@ -1,0 +1,17 @@
+{
+    "name": "adduc/phpmodbus",
+    "description": "Composer version of PhpModBus",
+    "license": "LGPL",
+    "authors": [
+        {
+            "name": "Honza Krakora",
+            "email": "krakora.jan@googlemail.com"
+        }
+    ],
+    "autoload": {
+        "classmap": [ "Phpmodbus" ]
+    },
+    "require": {
+        "ext-sockets": "*"
+    }
+}

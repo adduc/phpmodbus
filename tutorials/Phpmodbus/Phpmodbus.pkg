@@ -1,0 +1,121 @@
+<refentry id="{@id}">
+ <refnamediv>
+  <refname>Phpmodbus user's guide</refname>
+  <refpurpose>Phpmodbus How-to</refpurpose>
+ </refnamediv>
+ <refsynopsisdiv>
+  <author>
+   Jan Krakora
+   <authorblurb>
+    {@link mailto:jak.krakora@wago.com email}
+   </authorblurb>
+  </author>
+ </refsynopsisdiv>
+ {@toc}
+ <refsect1 id="{@id intro}">
+  <title>Introduction</title>
+  <para>
+   Phpmodbus is a PHP library for the Modbus protocol. The library implements
+   Modbus UDP master class with subset of the most used Modbus commands.
+  </para>
+  <para>
+   The library implements:
+   <itemizedlist>
+     <listitem><para>FC  3: read multiple registers</para></listitem>
+     <listitem><para>FC 16: write multiple registers</para></listitem>
+     <listitem><para>FC 23: read write registers</para></listitem>
+    </itemizedlist>
+  </para>
+  <para>
+   For more about Modbus protocol see [{@link http://www.modbus.org}] or
+   [{@link http://en.wikipedia.org/wiki/Modbus Wiki}]
+  </para>
+  <note>
+   Developed with support of <graphic fileref="wago_logo.png"/> {@link http://www.wago.com}.
+  </note>
+ </refsect1>
+ <refsect1 id="{@id intro}">
+  <title>Installation</title>
+  <para>
+   At the first, it is supposed an PHP solution has been already installed on
+   your server (LAMP, WAMP, MSS+CGI etc.).
+  </para>
+  <para>
+   Copy the Phpmodbus library to your PHP project folder.
+  </para>
+  <para>
+   Create a PHP script and assign the library using
+     <programlisting role="ini">
+      <![CDATA[ require_once dirname(__FILE__) . './Phpmodbus/ModbusMasterUdp.php'; ]]>
+     </programlisting>
+  </para>
+  <para>
+    To create the Modbus master object, that will communicate with a Modbus slave
+    at IP address 192.168.1.1, write
+    <programlisting role="ini">
+      <![CDATA[ $modbus = new ModbusMasterUdp("192.168.1.1"); ]]>
+     </programlisting>
+  </para>
+  <para>
+    To read 5 words (10 bytes) located at the memory beginning at address = 12288 of
+    the devide with Modbus ID=0 use
+    <programlisting role="ini">
+      <![CDATA[ $recData = $modbus->readMultipleRegisters(0, 12288, 5); ]]>
+     </programlisting>
+  </para>
+  <para>
+  For other examples see sections bellow.
+  </para>
+ </refsect1>
+ <refsect1 id="{@id examples}">
+  <title>Examples</title>
+  <para>
+    This section presents library features and examples
+  </para>
+  <refsect2 id="{@id example_fc3}">
+    <title>FC3 - read mutliple registers</title>
+    <para>
+      FC3 functionality example
+    </para>
+    <para>
+    {@example example_fc3.php}
+    </para>
+  </refsect2>
+  <refsect2 id="{@id example_fc16}">
+    <title>FC16 - write mutliple registers</title>
+    <para>
+      FC16 functionality example
+    </para>
+    <para>
+    {@example example_fc16.php}
+    </para>
+  </refsect2>
+  <refsect2 id="{@id example_fc23}">
+    <title>FC23 - read write registers</title>
+    <para>
+      FC23 functionality example
+    </para>
+    <para>
+    {@example example_fc23.php}
+    </para>
+  </refsect2>
+  <refsect2 id="{@id wago_example}">
+    <title>Dump of M-memory from WAGO 750-84x series coupler.</title>
+    <para>
+      Dump of M-memory from WAGO 750-84x series coupler.
+    </para>
+    <para>
+    {@example example_750841_Mmemory.php}
+    </para>
+  </refsect2>
+  <refsect2 id="{@id datatype}">
+    <title>Data conversion to PHP types.</title>
+    <para>
+      Conversion of the data bytes, received from Modbus, to a PHP type.
+    </para>
+    <para>
+    {@example example_datatype.php}
+    </para>
+  </refsect2>
+ </refsect1> 
+</refentry>
