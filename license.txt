@@ -1,10 +1,10 @@
 The Phpmodbus License, Version 1
 ============================
 
-Copyright (c) 2004, 2011 Jan Krakora, Wago (http://www.wago.com)
+Copyright (c) 2004, 2013 Jan Krakora
 All rights reserved.
 
-This license is a legal agreement between you and Jan Krakora, Wago (the "Author")
+This license is a legal agreement between you and Jan Krakora (the "Author")
 for the use of Phpmodbus (the "Software"). By obtaining, using and/or
 copying the Software, you agree that you have read, understood, and will
 comply with the terms and conditions of this license.

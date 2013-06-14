@@ -98,6 +98,8 @@ class ModbusMaster {
             $this->status .= "Bound\n";
         }
     }
+    // Socket settings
+    socket_set_option($this->sock, SOL_SOCKET, SO_SNDTIMEO, array('sec' => 1, 'usec' => 0));
     // Connect the socket
     $result = @socket_connect($this->sock, $this->host, $this->port);
     if ($result === false) {
