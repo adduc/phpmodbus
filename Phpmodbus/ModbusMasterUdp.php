@@ -1,12 +1,12 @@
 <?php
 /**
- * Phpmodbus Copyright (c) 2004, 2009 Jan Krakora, WAGO Kontakttechnik GmbH & Co. KG (http://www.wago.com)
+ * Phpmodbus Copyright (c) 2004, 2010 Jan Krakora, WAGO Kontakttechnik GmbH & Co. KG (http://www.wago.com)
  *  
  * This source file is subject to the "PhpModbus license" that is bundled
  * with this package in the file license.txt.
  *   
  *
- * @copyright  Copyright (c) 2004, 2009 Jan Krakora, WAGO Kontakttechnik GmbH & Co. KG (http://www.wago.com)
+ * @copyright  Copyright (c) 2004, 2010 Jan Krakora, WAGO Kontakttechnik GmbH & Co. KG (http://www.wago.com)
  * @license PhpModbus license 
  * @category Phpmodbus
  * @tutorial Phpmodbus.pkg 
@@ -29,15 +29,14 @@ require_once dirname(__FILE__) . '/PhpType.php';
  *   - FC 23: read write registers
  *   
  * @author Jan Krakora
- * @copyright  Copyright (c) 2004, 2009 Jan Krakora, WAGO Kontakttechnik GmbH & Co. KG (http://www.wago.com)  
+ * @copyright  Copyright (c) 2004, 2010 Jan Krakora, WAGO Kontakttechnik GmbH & Co. KG (http://www.wago.com)
  * @package Phpmodbus  
  *
  */
 class ModbusMasterUdp {
   var $sock;
   var $port = "502";
-  var $host = "192.168.1.1";  
-  var $errstr;
+  var $host = "192.168.1.1";
   var $status;
   var $timeout_sec = 5; // 5 sec
   var $endianess = 0; // defines endian codding (little endian == 0, big endian == 1) 
@@ -54,6 +53,15 @@ class ModbusMasterUdp {
   }
 
   /**
+   * __toString
+   *
+   * Magic method
+   */
+  function  __toString() {
+      return "<pre>" . $this->status . "</pre>";
+  }
+
+  /**
    * connect
    *
    * Connect the socket
@@ -66,11 +74,10 @@ class ModbusMasterUdp {
     // connect
     $result = @socket_connect($this->sock, $this->host, $this->port);
     if ($result === false) {
-        $this->errstr .= "socket_connect() failed.</br>Reason: ($result) " . 
-            socket_strerror(socket_last_error($this->sock));
-        return false;
+        throw new Exception("socket_connect() failed.</br>Reason: ($result)".
+            socket_strerror(socket_last_error($this->sock)));
     } else {
-        $this->status .= "Connected</br>";
+        $this->status .= "Connected\n";
         return true;        
     }    
   }
@@ -82,7 +89,7 @@ class ModbusMasterUdp {
    */
   private function disconnect(){    
     socket_close($this->sock);
-    $this->status .= "Disconnected</br>";
+    $this->status .= "Disconnected\n";
   }
 
   /**
@@ -94,7 +101,7 @@ class ModbusMasterUdp {
    */
   private function send($packet){
     socket_write($this->sock, $packet, strlen($packet));  
-    $this->status .= "Send</br>";  
+    $this->status .= "Send\n";
   }
 
   /**
@@ -116,19 +123,18 @@ class ModbusMasterUdp {
             $exceptsocks,
             0, 
             300000) !== FALSE) {
-            $this->status .= "Wait received data</br>";            
+            $this->status .= "Wait data ... \n";
         if (in_array($this->sock, $readsocks)) {
             while (@socket_recv($this->sock, $rec, 2000, 0)) {
-                $this->status .= "Received</br>";
+                $this->status .= "Data received\n";
                 return $rec;
             }
             $lastAccess = time();
         } else {             
-            if (time()-$lastAccess >= $this->timeout_sec) {                
-                $this->errstr .= "Watchdog time expired [ " . 
+            if (time()-$lastAccess >= $this->timeout_sec) {
+                throw new Exception( "Watchdog time expired [ " .
                   $this->timeout_sec . " sec]!!! Connection to " . 
-                  $this->host . " is not established.";
-                return false;
+                  $this->host . " is not established.");
             }
         }
         $readsocks[] = $this->sock;
@@ -145,12 +151,9 @@ class ModbusMasterUdp {
    */
   private function responseCode($packet){    
     if(($packet[7] & 0x80) > 0) {
-      $this->errstr .= "Modbus response error code:" . ord($packet[8]);
-      return false;
-    }
-    else
-    {      
-      $this->status .= "Modbus response error code: NOERROR</br>";
+      throw new Exception("Modbus response error code:" . ord($packet[8]));
+    } else {
+      $this->status .= "Modbus response error code: NOERROR\n";
       return true;
     }    
   }
@@ -171,27 +174,21 @@ class ModbusMasterUdp {
    * @return false|Array Success flag or array of received data.
    */
   function readMultipleRegisters($unitId, $reference, $quantity){
-    $this->errstr = "";
-    $this->status = "readMultipleRegisters: START</br>";
+    $this->status .= "readMultipleRegisters: START\n";
     // connect
-    if(!$this->connect())
-      return false;
+    $this->connect();
     // send FC 3    
     $packet = $this->readMultipleRegistersPacketBuilder($unitId, $reference, $quantity);
     $this->status .= $this->printPacket($packet);    
     $this->send($packet);
     // receive response
     $rpacket = $this->rec();
-    if(!$rpacket)
-      return false;
-    $this->status .= $this->printPacket($rpacket);
-    // parse packet
+    $this->status .= $this->printPacket($rpacket);    
+    // parse packet    
     $receivedData = $this->readMultipleRegistersParser($rpacket);
-    if(!$receivedData)
-      return false;
     // disconnect
     $this->disconnect();
-    $this->status .= "readMultipleRegisters: DONE</br>";    
+    $this->status .= "readMultipleRegisters: DONE\n";
     // return
     return $receivedData;
   }
@@ -222,6 +219,8 @@ class ModbusMasterUdp {
    */
   private function readMultipleRegistersPacketBuilder($unitId, $reference, $quantity){
     $dataLen = 0;
+    // build data section
+    $buffer1 = "";
     // build body
     $buffer2 = "";
     $buffer2 .= iecType::iecBYTE(3);             // FC 3 = 3(0x03)
@@ -247,11 +246,10 @@ class ModbusMasterUdp {
    * @param string $packet
    * @return array
    */
-  private function readMultipleRegistersParser($packet){
+  private function readMultipleRegistersParser($packet){    
     $data = array();
-    // if not exception
-    if(!$this->responseCode($packet))
-      return false;
+    // check Response code
+    $this->responseCode($packet);
     // get data
     for($i=0;$i<ord($packet[8]);$i++){
       $data[$i] = ord($packet[9+$i]);
@@ -275,26 +273,21 @@ class ModbusMasterUdp {
    * @return bool Success flag
    */       
   function writeMultipleRegister($unitId, $reference, $data, $dataTypes){
-    $this->errstr = "";
-    $this->status = "writeMultipleRegister: START</br>";
+    $this->status .= "writeMultipleRegister: START\n";
     // connect
-    if(!$this->connect())
-      return false;
+    $this->connect();
     // send FC16    
     $packet = $this->writeMultipleRegisterPacketBuilder($unitId, $reference, $data, $dataTypes);
     $this->status .= $this->printPacket($packet);    
     $this->send($packet);
     // receive response
     $rpacket = $this->rec();
-    if(!$rpacket)
-      return false;
     $this->status .= $this->printPacket($rpacket);    
     // parse packet
-    if(!$this->writeMultipleRegisterParser($rpacket))
-      return false;    
+    $this->writeMultipleRegisterParser($rpacket);
     // disconnect
     $this->disconnect();
-    $this->status .= "writeMultipleRegister: DONE</br>";
+    $this->status .= "writeMultipleRegister: DONE\n";
     return true;
   }
 
@@ -376,8 +369,7 @@ class ModbusMasterUdp {
    * @return bool
    */
   private function writeMultipleRegisterParser($packet){
-    if(!$this->responseCode($rpacket))
-      return false;
+    $this->responseCode($rpacket);
     return true;
   }
   
@@ -400,27 +392,21 @@ class ModbusMasterUdp {
    * @return false|Array Success flag or array of data.
    */
   function readWriteRegisters($unitId, $referenceRead, $quantity, $referenceWrite, $data, $dataTypes){
-    $this->errstr = "";
-    $this->status = "readWriteRegisters: START</br>";
+    $this->status .= "readWriteRegisters: START\n";
     // connect
-    if(!$this->connect())
-      return false;
+    $this->connect();
     // send FC23    
     $packet = $this->readWriteRegistersPacketBuilder($unitId, $referenceRead, $quantity, $referenceWrite, $data, $dataTypes);
     $this->status .= $this->printPacket($packet);    
     $this->send($packet);
     // receive response
     $rpacket = $this->rec();
-    if(!$rpacket)
-      return false;
     $this->status .= $this->printPacket($rpacket);
     // parse packet
-    $receivedData = $this->readWriteRegistersParser($rpacket); 
-    if(!$receivedData)
-      return false;
+    $receivedData = $this->readWriteRegistersParser($rpacket);
     // disconnect
     $this->disconnect();
-    $this->status .= "writeMultipleRegister: DONE</br>";    
+    $this->status .= "writeMultipleRegister: DONE\n";
     // return
     return $receivedData;
   }
@@ -538,7 +524,7 @@ class ModbusMasterUdp {
   /**
    * printPacket
    *
-   * Print whole packet in the hex form
+   * Print a packet in the hex form
    *
    * @param string $packet
    * @return string
@@ -549,7 +535,7 @@ class ModbusMasterUdp {
     for($i=0;$i<strlen($packet);$i++){
       $str .= $this->byte2hex(ord($packet[$i]));
     }
-    $str .= "</br>";
+    $str .= "\n";
     return $str;
   }
 }

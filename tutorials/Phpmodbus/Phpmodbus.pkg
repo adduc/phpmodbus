@@ -46,7 +46,7 @@
   <para>
    Create a PHP script and assign the library using
      <programlisting role="ini">
-      <![CDATA[ require_once dirname(__FILE__) . './Phpmodbus/ModbusMasterUdp.php'; ]]>
+      <![CDATA[ require_once dirname(__FILE__) . '/Phpmodbus/ModbusMasterUdp.php'; ]]>
      </programlisting>
   </para>
   <para>
