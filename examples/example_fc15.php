@@ -6,12 +6,14 @@ require_once dirname(__FILE__) . '/../Phpmodbus/ModbusMasterUdp.php';
 $modbus = new ModbusMasterUdp("192.192.15.51");
 
 // Data to be writen
-$data = array(10, -1000, 2000, 3.0);
-$dataTypes = array("WORD", "INT", "DINT", "REAL");
+$data = array(TRUE, FALSE, TRUE, TRUE, FALSE, TRUE, TRUE, TRUE, 
+              TRUE, TRUE, TRUE, TRUE, FALSE, FALSE, FALSE, FALSE,
+              FALSE, FALSE, FALSE, FALSE, TRUE, TRUE, TRUE, TRUE,
+              TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE);
 
 try {
-    // FC16
-    $modbus->writeMultipleRegister(0, 12288, $data, $dataTypes);
+    // FC15
+    $modbus->writeMultipleCoils(0, 12288, $data);
 }
 catch (Exception $e) {
     // Print error information if any
@@ -22,5 +24,3 @@ catch (Exception $e) {
 
 // Print status information
 echo $modbus;
-
-?>

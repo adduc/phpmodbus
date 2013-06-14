@@ -25,26 +25,26 @@ function printPacket($packet){
     if($i % 2)
       $str .= "_";
   }
-  $str .= "</br>";
+  $str .= "<br>\n";
   return $str;
 }
 
-echo "Endianing off <hr>";
+echo "Endianing off <hr>\n";
 // Print mixed values
 for($i=0;$i<count($data);$i++) {
   echo $data[$i] . " --> ";
   $v = IecType::iecREAL($data[$i], 0);
   echo printPacket($v);
-  "<br>";
+  "<br>\n";
 }
 
-echo "Endianing on <hr>";
+echo "Endianing on <hr>\n";
 // Print mixed values
 for($i=0;$i<count($data);$i++) {
   echo $data[$i] . " --> ";
   $v = IecType::iecREAL($data[$i], 1);
   echo printPacket($v);
-  "<br>";
+  "<br>\n";
 }
  
 ?>

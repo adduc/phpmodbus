@@ -21,7 +21,9 @@
   <para>
    The library implements:
    <itemizedlist>
+     <listitem><para>FC  1: read multiple coils</para></listitem>
      <listitem><para>FC  3: read multiple registers</para></listitem>
+     <listitem><para>FC 15: write multiple coils</para></listitem>
      <listitem><para>FC 16: write multiple registers</para></listitem>
      <listitem><para>FC 23: read write registers</para></listitem>
     </itemizedlist>
@@ -44,25 +46,40 @@
    Copy the Phpmodbus library to your PHP project folder.
   </para>
   <para>
-   Create a PHP script and assign the library using
-     <programlisting role="ini">
-      <![CDATA[ require_once dirname(__FILE__) . '/Phpmodbus/ModbusMasterUdp.php'; ]]>
+   Create a PHP script and assign the library using require_once() command
+     <programlisting role="c">
+      <![CDATA[require_once dirname(__FILE__) . '/Phpmodbus/ModbusMasterUdp.php'; ]]>
      </programlisting>
   </para>
   <para>
-    To create the Modbus master object, that will communicate with a Modbus slave
-    at IP address 192.168.1.1, write
-    <programlisting role="ini">
+    To create the Modbus master object communicating to the 192.168.1.1 modbus slave 
+    at IP address 192.168.1.1 write
+    <programlisting role="c" linenumbering="numbered" startinglinenumber="2">
       <![CDATA[ $modbus = new ModbusMasterUdp("192.168.1.1"); ]]>
+    </programlisting>
+  </para>
+  <para>
+    To read 5 words (10 bytes) from the device ID=0 and its memory address 12288
+    use try-catch method call
+    <programlisting role="c" linenumbering="numbered" startinglinenumber="3">
+      <![CDATA[try {
+    // Function processing
+    $recData = $modbus->readMultipleRegisters(0, 12288, 5); 
+}
+catch (Exception $e) {
+    // Exception processing, e.g. print error information
+    echo $modbus;
+    echo $e;
+    exit; 
+}]]>
      </programlisting>
   </para>
   <para>
-    To read 5 words (10 bytes) located at the memory beginning at address = 12288 of
-    the devide with Modbus ID=0 use
-    <programlisting role="ini">
-      <![CDATA[ $recData = $modbus->readMultipleRegisters(0, 12288, 5); ]]>
-     </programlisting>
+    To process the function byte stream, use conversion to PHP types in 
   </para>
+  <programlisting role="c" linenumbering="numbered" startinglinenumber="15">
+      <![CDATA[echo PhpType::bytes2string($recData); ]]>
+     </programlisting>
   <para>
   For other examples see sections bellow.
   </para>
@@ -72,6 +89,15 @@
   <para>
     This section presents library features and examples
   </para>
+    <refsect2 id="{@id example_fc1}">
+    <title>FC1 - read mutliple coils</title>
+    <para>
+      FC1 functionality example
+    </para>
+    <para>
+    {@example example_fc1.php}
+    </para>
+  </refsect2>
   <refsect2 id="{@id example_fc3}">
     <title>FC3 - read mutliple registers</title>
     <para>
@@ -79,6 +105,15 @@
     </para>
     <para>
     {@example example_fc3.php}
+    </para>
+  </refsect2>
+  <refsect2 id="{@id example_fc15}">
+    <title>FC15 - write mutliple coils</title>
+    <para>
+      FC15 functionality example
+    </para>
+    <para>
+    {@example example_fc15.php}
     </para>
   </refsect2>
   <refsect2 id="{@id example_fc16}">

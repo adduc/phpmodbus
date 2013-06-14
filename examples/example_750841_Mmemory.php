@@ -3,7 +3,6 @@
 require_once dirname(__FILE__) . '/../Phpmodbus/ModbusMasterUdp.php';
 
 // Create Modbus object
-// $ip = "192.168.1.1";
 $ip = "192.192.15.51";
 $modbus = new ModbusMasterUdp($ip);
 
@@ -14,7 +13,6 @@ try {
     $mw0address = 12288;
     $quantity = 6;
     $recData = $modbus->readMultipleRegisters($moduleId, $reference, $quantity);
-    print_r($recData);
 }
 catch (Exception $e) {
     echo $modbus;
