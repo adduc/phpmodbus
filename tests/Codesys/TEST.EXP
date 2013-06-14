@@ -1,0 +1,256 @@
+
+
+(* @NESTEDCOMMENTS := 'Yes' *)
+(* @PATH := '' *)
+(* @OBJECTFLAGS := '0, 8' *)
+(* @SYMFILEFLAGS := '2048' *)
+PROGRAM PLC_PRG
+VAR
+	(* BOOL, COIL *)
+	COIL1 AT %MX0.0 : BOOL := 0;
+	COIL2 AT %MX0.1 : BOOL := 0;
+	COIL3 AT %MX0.2 : BOOL := 0;
+	COIL4 AT %MX0.3 : BOOL := 0;
+	COIL5 AT %MX0.4 : BOOL := 0;
+	COIL6 AT %MX0.5 : BOOL := 0;
+	COIL7 AT %MX0.6 : BOOL := 0;
+	COIL8 AT %MX0.7 : BOOL := 0;
+
+	(* BYTE *)
+	BYTE1 AT %MB0 : BYTE := 0;
+	BYTE2 AT %MB1 : BYTE := 0;
+	BYTE3 AT %MB2 : BYTE := 0;
+	BYTE4 AT %MB3 : BYTE := 0;
+	BYTE5 AT %MB4 : BYTE := 0;
+
+	(* INT *)
+	INT1 AT %MW0 : INT := 0;
+	INT2 AT %MW1 : INT := 0;
+	INT3 AT %MW2 : INT := 0;
+	INT4 AT %MW3 : INT := 0;
+	INT5 AT %MW4 : INT := 0;
+
+	(* WORD *)
+	WORD1 AT %MW0 : WORD := 0;
+	WORD2 AT %MW1 : WORD := 0;
+	WORD3 AT %MW2 : WORD := 0;
+	WORD4 AT %MW3 : WORD := 0;
+	WORD5 AT %MW4 : WORD := 0;
+
+	(* DINT *)
+	DINT1 AT %MD0 : DINT := 0;
+	DINT2 AT %MD1 : DINT := 0;
+	DINT3 AT %MD2 : DINT := 0;
+	DINT4 AT %MD3 : DINT := 0;
+	DINT5 AT %MD4 : DINT := 0;
+
+	(* DWORD *)
+	DWORD1 AT %MD0 : DWORD := 0;
+	DWORD2 AT %MD1 : DWORD := 0;
+	DWORD3 AT %MD2 : DWORD := 0;
+	DWORD4 AT %MD3 : DWORD := 0;
+	DWORD5 AT %MD4 : DWORD := 0;
+
+	(* REAL *)
+	REAL1 AT %MD0 : REAL := 0;
+	REAL2 AT %MD1 : REAL := 0;
+	REAL3 AT %MD2 : REAL := 0;
+	REAL4 AT %MD3 : REAL := 0;
+	REAL5 AT %MD4 : REAL := 0;
+
+	(* String *)
+	STRING1 AT %MW0 : STRING := 'Hello word!!!';
+END_VAR
+
+(* @END_DECLARATION := '0' *)
+(* Something to do *)
+;
+END_PROGRAM
+
+(* @NESTEDCOMMENTS := 'Yes' *)
+(* @GLOBAL_VARIABLE_LIST := 'Global_Variables' *)
+(* @PATH := '' *)
+(* @OBJECTFLAGS := '0, 8' *)
+(* @SYMFILEFLAGS := '2048' *)
+VAR_GLOBAL
+END_VAR
+
+(* @OBJECT_END := 'Global_Variables' *)
+(* @CONNECTIONS := Global_Variables
+FILENAME : ''
+FILETIME : 0
+EXPORT : 0
+NUMOFCONNECTIONS : 0
+*)
+
+(* @NESTEDCOMMENTS := 'Yes' *)
+(* @GLOBAL_VARIABLE_LIST := 'Variable_Configuration' *)
+(* @PATH := '' *)
+(* @OBJECTFLAGS := '0, 8' *)
+(* @SYMFILEFLAGS := '2048' *)
+VAR_CONFIG
+END_VAR
+
+(* @OBJECT_END := 'Variable_Configuration' *)
+(* @CONNECTIONS := Variable_Configuration
+FILENAME : ''
+FILETIME : 0
+EXPORT : 0
+NUMOFCONNECTIONS : 0
+*)
+
+
+_ALARMCONFIG
+_ALARMCONFIGNEXTTEXTID : 10002
+_ALARMCONFIGFORMATS : 'HH$':$'mm$':$'ss','dd$'-$'MM$'-$'yyyy'
+_ALARMCLASSLIST : 1
+_ALARMCLASSID : 0
+_ALARMCLASSACKTYPE : 0
+_ALARMCLASSNAME : 'DEFAULT'
+_ALARMCLASSDESCRIPTION : ''
+_ALARMCLASSBGCOLORS : 16777215,16777215,16777215
+_ALARMCLASSTEXTCOLORS : 3394560,255,16711680
+_ALARMCLASSBITMAPS : '','',''
+_ALARMACTIONLIST : 0
+(* @ALARMCLASSRESETCOLORS := '_ALARMCLASSRESETCOLORS: 33023,16777215' *)
+(* @ALARMCLASSRESETBITMAP := '_ALARMCLASSRESETBITMAP: $'$'' *)
+_ALARMGROUPLISTNAME : 'System'
+_ALARMGROUPPATH : 'System'
+_ALARMGROUPLIST : 0
+_VISUALSETTINGSFLAGS : 0,0,0,0
+_VISUALSETTINGSFLAGS : '','',''
+_VISUALSETTINGSDYNTEXTFILECOUNT : 0
+
+(* @ALARMCONFIGFLAGS := '_ALARMCONFIGFLAGS: 0' *)
+(* @ALARMCONFIGGLOBALDB_STR := '_ALARMCONFIGGLOBALDB_STRINGS: $'$',$'$',$'$',$'$'' *)
+(* @ALARMCONFIGGLOBALDB_NUM := '_ALARMCONFIGGLOBALDB_NUMBERS: 0,0' *)
+_END_ALARMCONFIG
+
+
+LIBRARY
+Standard.lib 2.12.10 14:48:34
+(* @LIBRARYSYMFILEINFO := '0' *)
+NumOfPOUs: 26
+ASCIIBYTE_TO_STRING: 2048
+CONCAT: 0
+CTD: 0
+CTU: 0
+CTUD: 0
+DELETE: 0
+F_TRIG: 0
+FIND: 0
+INSERT: 0
+LEFT: 0
+LEN: 0
+MID: 0
+R_TRIG: 0
+REAL_STATE: 2048
+REPLACE: 0
+RIGHT: 0
+RS: 0
+RTC: 0
+SEMA: 0
+SR: 0
+STANDARD_VERSION: 2048
+STRING_COMPARE: 2048
+STRING_TO_ASCIIBYTE: 2048
+TOF: 0
+TON: 0
+TP: 0
+NumOfGVLs: 1
+'Global Variables 0': 0
+END_LIBRARY
+
+LIBRARY
+SYSLIBCALLBACK.LIB 2.12.10 14:48:32
+(* @LIBRARYSYMFILEINFO := '0' *)
+NumOfPOUs: 2
+SysCallbackRegister: 0
+SysCallbackUnregister: 0
+NumOfGVLs: 2
+Globale_Variablen: 0
+Version: 0
+END_LIBRARY
+
+PLC_CONFIGURATION
+_GLOBAL
+_VERSION: 3
+_AUTOADR: 0
+_CHECKADR: 0
+_SAVECONFIGFILESINPROJECT: 0
+_END_GLOBAL
+
+_MODULE: '3S'
+_SECTION_NAME: 'Root'
+_INDEX_IN_PARENT: '-1'
+_MODULE_NAME: 'Hardware configuration'
+_NODE_ID: -1
+_IECIN: %IB0
+_IECOUT: %QB0
+_IECDIAG: %MB0
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+
+_MODULE: '3S'
+_SECTION_NAME: 'K_Bus'
+_INDEX_IN_PARENT: '1'
+_MODULE_NAME: 'K-Bus'
+_NODE_ID: 0
+_IECIN: %IB0
+_IECOUT: %QB0
+_IECDIAG: %MB0
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+_END_MODULE
+
+_MODULE: '3S'
+_SECTION_NAME: 'FB_VARS'
+_INDEX_IN_PARENT: '2'
+_MODULE_NAME: 'Fieldbus variables'
+_NODE_ID: 1
+_IECIN: %IB0
+_IECOUT: %QB0
+_IECDIAG: %MB0
+_DOWNLOAD: 1
+_EXCLUDEFROMAUTOADR: 0
+_COMMENT: ''
+_END_MODULE
+_END_MODULE
+PLC_END
+
+
+RESOURCE
+{event_task : 'start','Called when program starts','','FUNCTION systemevent: DWORD VAR_INPUT dwEvent: DWORD; dwFilter: DWORD; dwOwner: DWORD; END_VAR '}{event_task_info : 0,1,11986}
+{event_task : 'stop','Called when program stops','','FUNCTION systemevent: DWORD VAR_INPUT dwEvent: DWORD; dwFilter: DWORD; dwOwner: DWORD; END_VAR '}{event_task_info : 0,2,11986}
+{event_task : 'before_reset','Called before reset takes place','','FUNCTION systemevent: DWORD VAR_INPUT dwEvent: DWORD; dwFilter: DWORD; dwOwner: DWORD; END_VAR '}{event_task_info : 0,3,11986}
+{event_task : 'after_reset','Called after reset took place','','FUNCTION systemevent: DWORD VAR_INPUT dwEvent: DWORD; dwFilter: DWORD; dwOwner: DWORD; END_VAR '}{event_task_info : 0,4,11986}
+{event_task : 'shutdown','Called before shutdown is performed (Firmware update over ethernet)','','FUNCTION systemevent: DWORD VAR_INPUT dwEvent: DWORD; dwFilter: DWORD; dwOwner: DWORD; END_VAR '}{event_task_info : 0,5,11986}
+{event_task : 'excpt_watchdog','Software watchdog of IEC-task expired','','FUNCTION systemevent: DWORD VAR_INPUT dwEvent: DWORD; dwFilter: DWORD; dwOwner: DWORD; END_VAR '}{event_task_info : 0,7,11986}
+{event_task : 'excpt_fieldbus','Fieldbus error','','FUNCTION systemevent: DWORD VAR_INPUT dwEvent: DWORD; dwFilter: DWORD; dwOwner: DWORD; END_VAR '}{event_task_info : 0,9,11986}
+{event_task : 'excpt_ioupdate','KBus error','','FUNCTION systemevent: DWORD VAR_INPUT dwEvent: DWORD; dwFilter: DWORD; dwOwner: DWORD; END_VAR '}{event_task_info : 0,10,11986}
+{event_task : 'excpt_dividebyzero','Division by zero. Only integer operations!','','FUNCTION systemevent: DWORD VAR_INPUT dwEvent: DWORD; dwFilter: DWORD; dwOwner: DWORD; END_VAR '}{event_task_info : 0,18,11986}
+{event_task : 'excpt_noncontinuable','Exception handler','','FUNCTION systemevent: DWORD VAR_INPUT dwEvent: DWORD; dwFilter: DWORD; dwOwner: DWORD; END_VAR '}{event_task_info : 0,20,11986}
+{event_task : 'after_reading_inputs','Called after reading of inputs','','FUNCTION systemevent: DWORD VAR_INPUT dwEvent: DWORD; dwFilter: DWORD; dwOwner: DWORD; END_VAR '}{event_task_info : 0,28,11986}
+{event_task : 'before_writing_outputs','Called before writing of outputs','','FUNCTION systemevent: DWORD VAR_INPUT dwEvent: DWORD; dwFilter: DWORD; dwOwner: DWORD; END_VAR '}{event_task_info : 0,29,11986}
+{event_task : 'debug_loop','Debug loop at breakpoint','','FUNCTION systemevent: DWORD VAR_INPUT dwEvent: DWORD; dwFilter: DWORD; dwOwner: DWORD; END_VAR '}{event_task_info : 0,31,11986}
+{event_task : 'online_change','Is called after CodeInit() at Online-Change','','FUNCTION systemevent: DWORD VAR_INPUT dwEvent: DWORD; dwFilter: DWORD; dwOwner: DWORD; END_VAR '}{event_task_info : 0,33,11986}
+{event_task : 'before_download','Is called before the Download starts','','FUNCTION systemevent: DWORD VAR_INPUT dwEvent: DWORD; dwFilter: DWORD; dwOwner: DWORD; END_VAR '}{event_task_info : 0,34,11986}
+{event_task : 'event_login','Is called before the login service is performed','','FUNCTION systemevent: DWORD VAR_INPUT dwEvent: DWORD; dwFilter: DWORD; dwOwner: DWORD; END_VAR '}{event_task_info : 0,501,11986}
+{event_task : 'eth_overload','Ethernet Overload','','FUNCTION systemevent: DWORD VAR_INPUT dwEvent: DWORD; dwFilter: DWORD; dwOwner: DWORD; END_VAR '}{event_task_info : 0,750,11986}
+{event_task : 'eth_network_ready','Is called directly after the Network and the PLC are initialised','','FUNCTION systemevent: DWORD VAR_INPUT dwEvent: DWORD; dwFilter: DWORD; dwOwner: DWORD; END_VAR '}{event_task_info : 0,751,11986}
+{event_task : 'blink_code','New blink code / Blink code cleared ( Call STATUS_GET_LAST_ERROR for details )','','FUNCTION systemevent: DWORD VAR_INPUT dwEvent: DWORD; dwFilter: DWORD; dwOwner: DWORD; END_VAR '}{event_task_info : 0,752,11986}
+{event_task : 'interrupt_0','Interrupt Real Time Clock (every second)','','FUNCTION systemevent: DWORD VAR_INPUT dwEvent: DWORD; dwFilter: DWORD; dwOwner: DWORD; END_VAR '}{event_task_info : 0,1000,11986}
+
+END_RESOURCE
+
+
+_WORKSPACE
+_GLOBALVISUALSETTINGS
+_VISUALSETTINGSFLAGS : 0,0,0,0
+_VISUALSETTINGSFLAGS : '','',''
+_VISUALSETTINGSDYNTEXTFILECOUNT : 0
+_VISUALBITMAPLISTCOUNT : 0
+_END_GLOBALVISUALSETTINGS
+_END_WORKSPACE

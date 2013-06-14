@@ -22,7 +22,9 @@
    The library implements:
    <itemizedlist>
      <listitem><para>FC  1: read multiple coils</para></listitem>
+     <listitem><para>FC  2: read input discretes</para></listitem>
      <listitem><para>FC  3: read multiple registers</para></listitem>
+     <listitem><para>FC  6: write single register</para></listitem>
      <listitem><para>FC 15: write multiple coils</para></listitem>
      <listitem><para>FC 16: write multiple registers</para></listitem>
      <listitem><para>FC 23: read write registers</para></listitem>
@@ -32,9 +34,6 @@
    For more about Modbus protocol see [{@link http://www.modbus.org}] or
    [{@link http://en.wikipedia.org/wiki/Modbus Wiki}]
   </para>
-  <note>
-   Developed with support of <graphic fileref="wago_logo.png"/> {@link http://www.wago.com}.
-  </note>
  </refsect1>
  <refsect1 id="{@id install}">
   <title>Install</title>
@@ -104,6 +103,15 @@ catch (Exception $e) {
     {@example example_fc1.php}
     </para>
   </refsect2>
+  <refsect2 id="{@id example_fc2}">
+    <title>FC2 - read input discretes</title>
+    <para>
+      FC2 functionality example
+    </para>
+    <para>
+    {@example example_fc2.php}
+    </para>
+  </refsect2>
   <refsect2 id="{@id example_fc3}">
     <title>FC3 - read mutliple registers</title>
     <para>
@@ -111,6 +119,15 @@ catch (Exception $e) {
     </para>
     <para>
     {@example example_fc3.php}
+    </para>
+  </refsect2>
+  <refsect2 id="{@id example_fc6}">
+    <title>FC6 - write single register</title>
+    <para>
+      FC6 functionality example
+    </para>
+    <para>
+    {@example example_fc6.php}
     </para>
   </refsect2>
   <refsect2 id="{@id example_fc15}">

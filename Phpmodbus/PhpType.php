@@ -1,12 +1,12 @@
 <?php
 /**
- * Phpmodbus Copyright (c) 2004, 2010 Jan Krakora, WAGO Kontakttechnik GmbH & Co. KG (http://www.wago.com)
+ * Phpmodbus Copyright (c) 2004, 2012 Jan Krakora
  *
  * This source file is subject to the "PhpModbus license" that is bundled
  * with this package in the file license.txt.
  *
  * @author Jan Krakora
- * @copyright Copyright (c) 2004, 2010 Jan Krakora, WAGO Kontakttechnik GmbH & Co. KG (http://www.wago.com)
+ * @copyright Copyright (c) 2004, 2012 Jan Krakora
  * @license PhpModbus license
  * @category Phpmodbus
  * @package Phpmodbus
@@ -21,7 +21,7 @@
  * (array of bytes) to the PHP data type, i.e. signed int, unsigned int and float.
  *
  * @author Jan Krakora
- * @copyright  Copyright (c) 2004, 2010 Jan Krakora, WAGO Kontakttechnik GmbH & Co. KG (http://www.wago.com)
+ * @copyright  Copyright (c) 2004, 2012 Jan Krakora
  * @package Phpmodbus
  *
  */

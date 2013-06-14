@@ -25,8 +25,10 @@ require_once dirname(__FILE__) . '/PhpType.php';
  *  
  * Implemented MODBUS master functions:
  *   - FC  1: read coils
+ *   - FC  2: read input discretes
  *   - FC  3: read multiple registers
- *   - FC 15: write multiple coils 
+ *   - FC  6: write single register
+ *   - FC 15: write multiple coils
  *   - FC 16: write multiple registers
  *   - FC 23: read write registers
  *   
@@ -43,7 +45,7 @@ class ModbusMaster {
   public $client_port = "502";
   public $status;
   public $timeout_sec = 5; // Timeout 5 sec
-  public $endianess = 0; // Endianess codding (little endian == 0, big endian == 1) 
+  public $endianness = 0; // Endianness codding (little endian == 0, big endian == 1) 
   public $socket_protocol = "UDP"; // Socket protocol (TCP, UDP)
   
   /**
@@ -175,8 +177,28 @@ class ModbusMaster {
    * @return bool
    */
   private function responseCode($packet){    
-    if(($packet[7] & 0x80) > 0) {
-      throw new Exception("Modbus response error code:" . ord($packet[8]));
+    if((ord($packet[7]) & 0x80) > 0) {
+      // failure code
+      $failure_code = ord($packet[8]);
+      // failure code strings
+      $failures = array(
+        0x01 => "ILLEGAL FUNCTION",
+        0x02 => "ILLEGAL DATA ADDRESS",
+        0x03 => "ILLEGAL DATA VALUE",
+        0x04 => "SLAVE DEVICE FAILURE",
+        0x05 => "ACKNOWLEDGE",
+        0x06 => "SLAVE DEVICE BUSY",
+        0x08 => "MEMORY PARITY ERROR",
+        0x0A => "GATEWAY PATH UNAVAILABLE",
+        0x0B => "GATEWAY TARGET DEVICE FAILED TO RESPOND");
+      // get failure string
+      if(key_exists($failure_code, $failures)) {
+        $failure_str = $failures[$failure_code];
+      } else {
+        $failure_str = "UNDEFINED FAILURE CODE";
+      }
+      // exception response
+      throw new Exception("Modbus response error code: $failure_code ($failure_str)");
     } else {
       $this->status .= "Modbus response error code: NOERROR\n";
       return true;
@@ -189,7 +211,7 @@ class ModbusMaster {
    * Modbus function FC 1(0x01) - Read Coils
    * 
    * Reads {@link $quantity} of Coils (boolean) from reference 
-   * {@link $referenceRead} of a memory of a Modbus device given by 
+   * {@link $reference} of a memory of a Modbus device given by 
    * {@link $unitId}.
    * 
    * @param type $unitId
@@ -200,7 +222,7 @@ class ModbusMaster {
     $this->status .= "readCoils: START\n";
     // connect
     $this->connect();
-    // send FC 3    
+    // send FC 1
     $packet = $this->readCoilsPacketBuilder($unitId, $reference, $quantity);
     $this->status .= $this->printPacket($packet);    
     $this->send($packet);
@@ -219,7 +241,7 @@ class ModbusMaster {
   /**
    * fc1
    * 
-   * Alias to {@link readMultipleCoils} method
+   * Alias to {@link readCoils} method
    * 
    * @param type $unitId
    * @param type $reference
@@ -283,7 +305,7 @@ class ModbusMaster {
     $di = 0;
     foreach($data as $value){
       for($i=0;$i<8;$i++){
-        if($di > $quantity) continue;
+        if($di == $quantity) continue;
         // get boolean value 
         $v = ($value >> $i) & 0x01;
         // build boolean array
@@ -296,6 +318,97 @@ class ModbusMaster {
       }
     }
     return $data_bolean_array;
+  }
+  
+  /**
+   * readInputDiscretes
+   * 
+   * Modbus function FC 2(0x02) - Read Input Discretes
+   * 
+   * Reads {@link $quantity} of Inputs (boolean) from reference 
+   * {@link $reference} of a memory of a Modbus device given by 
+   * {@link $unitId}.
+   * 
+   * @param type $unitId
+   * @param type $reference
+   * @param type $quantity 
+   */
+  function readInputDiscretes($unitId, $reference, $quantity){
+    $this->status .= "readInputDiscretes: START\n";
+    // connect
+    $this->connect();
+    // send FC 2
+    $packet = $this->readInputDiscretesPacketBuilder($unitId, $reference, $quantity);
+    $this->status .= $this->printPacket($packet);    
+    $this->send($packet);
+    // receive response
+    $rpacket = $this->rec();
+    $this->status .= $this->printPacket($rpacket);    
+    // parse packet    
+    $receivedData = $this->readInputDiscretesParser($rpacket, $quantity);
+    // disconnect
+    $this->disconnect();
+    $this->status .= "readInputDiscretes: DONE\n";
+    // return
+    return $receivedData;
+  }
+  
+  /**
+   * fc2
+   * 
+   * Alias to {@link readInputDiscretes} method
+   * 
+   * @param type $unitId
+   * @param type $reference
+   * @param type $quantity
+   * @return type 
+   */
+  function fc2($unitId, $reference, $quantity){
+    return $this->readInputDiscretes($unitId, $reference, $quantity);
+  }
+  
+  /**
+   * readInputDiscretesPacketBuilder
+   * 
+   * FC2 packet builder - read coils
+   * 
+   * @param type $unitId
+   * @param type $reference
+   * @param type $quantity
+   * @return type 
+   */
+  private function readInputDiscretesPacketBuilder($unitId, $reference, $quantity){
+    $dataLen = 0;
+    // build data section
+    $buffer1 = "";
+    // build body
+    $buffer2 = "";
+    $buffer2 .= iecType::iecBYTE(2);              // FC 2 = 2(0x02)
+    // build body - read section    
+    $buffer2 .= iecType::iecINT($reference);      // refnumber = 12288      
+    $buffer2 .= iecType::iecINT($quantity);       // quantity
+    $dataLen += 5;
+    // build header
+    $buffer3 = '';
+    $buffer3 .= iecType::iecINT(rand(0,65000));   // transaction ID
+    $buffer3 .= iecType::iecINT(0);               // protocol ID
+    $buffer3 .= iecType::iecINT($dataLen + 1);    // lenght
+    $buffer3 .= iecType::iecBYTE($unitId);        //unit ID
+    // return packet string
+    return $buffer3. $buffer2. $buffer1;
+  }
+  
+  /**
+   * readInputDiscretesParser
+   * 
+   * FC 2 response parser, alias to FC 1 parser i.e. readCoilsParser.
+   * 
+   * @param type $packet
+   * @param type $quantity
+   * @return type 
+   */
+  private function readInputDiscretesParser($packet, $quantity){
+    return $this->readCoilsParser($packet, $quantity);
   }
   
   /**
@@ -398,6 +511,107 @@ class ModbusMaster {
   }
   
   /**
+   * writeSingleRegister
+   *
+   * Modbus function FC6(0x06) - Write Single Register.
+   *
+   * This function writes {@link $data} single word value at {@link $reference} position of 
+   * memory of a Modbus device given by {@link $unitId}.
+   *
+   *
+   * @param int $unitId usually ID of Modbus device 
+   * @param int $reference Reference in the device memory (e.g. in device WAGO 750-841, memory MW0 starts at address 12288)
+   * @param array $data Array of values to be written.
+   * @param array $dataTypes Array of types of values to be written. The array should consists of string "INT", "DINT" and "REAL".    
+   * @return bool Success flag
+   */       
+  function writeSingleRegister($unitId, $reference, $data, $dataTypes){
+    $this->status .= "writeSingleRegister: START\n";
+    // connect
+    $this->connect();
+    // send FC6    
+    $packet = $this->writeSingleRegisterPacketBuilder($unitId, $reference, $data, $dataTypes);
+    $this->status .= $this->printPacket($packet);    
+    $this->send($packet);
+    // receive response
+    $rpacket = $this->rec();
+    $this->status .= $this->printPacket($rpacket);    
+    // parse packet
+    $this->writeSingleRegisterParser($rpacket);
+    // disconnect
+    $this->disconnect();
+    $this->status .= "writeSingleRegister: DONE\n";
+    return true;
+  }
+
+
+  /**
+   * fc6
+   *
+   * Alias to {@link writeSingleRegister} method
+   *
+   * @param int $unitId
+   * @param int $reference
+   * @param array $data
+   * @param array $dataTypes
+   * @return bool
+   */
+  function fc6($unitId, $reference, $data, $dataTypes){    
+    return $this->writeSingleRegister($unitId, $reference, $data, $dataTypes);
+  }
+
+
+  /**
+   * writeSingleRegisterPacketBuilder
+   *
+   * Packet builder FC6 - WRITE single register
+   *
+   * @param int $unitId
+   * @param int $reference
+   * @param array $data
+   * @param array $dataTypes
+   * @return string
+   */
+  private function writeSingleRegisterPacketBuilder($unitId, $reference, $data, $dataTypes){
+    $dataLen = 0;
+    // build data section
+    $buffer1 = "";
+    foreach($data as $key=>$dataitem) {
+      $buffer1 .= iecType::iecINT($dataitem);   // register values x
+      $dataLen += 2;
+      break;
+    }
+    // build body
+    $buffer2 = "";
+    $buffer2 .= iecType::iecBYTE(6);             // FC6 = 6(0x06)
+    $buffer2 .= iecType::iecINT($reference);      // refnumber = 12288
+    $dataLen += 3;
+    // build header
+    $buffer3 = '';
+    $buffer3 .= iecType::iecINT(rand(0,65000));   // transaction ID    
+    $buffer3 .= iecType::iecINT(0);               // protocol ID    
+    $buffer3 .= iecType::iecINT($dataLen + 1);    // lenght    
+    $buffer3 .= iecType::iecBYTE($unitId);        //unit ID    
+    
+    // return packet string
+    return $buffer3. $buffer2. $buffer1;
+  }
+  
+  /**
+   * writeSingleRegisterParser
+   *
+   * FC6 response parser
+   *
+   * @param string $packet
+   * @return bool
+   */
+  private function writeSingleRegisterParser($packet){
+    $this->responseCode($packet);
+    return true;
+  }
+
+  
+  /**
    * writeMultipleCoils
    * 
    * Modbus function FC15(0x0F) - Write Multiple Coils
@@ -414,7 +628,7 @@ class ModbusMaster {
     $this->status .= "writeMultipleCoils: START\n";
     // connect
     $this->connect();
-    // send FC16    
+    // send FC15    
     $packet = $this->writeMultipleCoilsPacketBuilder($unitId, $reference, $data);
     $this->status .= $this->printPacket($packet);    
     $this->send($packet);
@@ -629,7 +843,7 @@ class ModbusMaster {
     $this->responseCode($packet);
     return true;
   }
-  
+
   /**
    * readWriteRegisters
    *
