@@ -441,8 +441,7 @@ class ModbusMasterUdp {
    * @return string
    */
   private function writeMultipleCoilsPacketBuilder($unitId, $reference, $data){
-    $dataLen = 0;
-    $endianness = 0;    
+    $dataLen = 0;    
     // build bool stream to the WORD array
     $data_word_stream = array();
     $data_word = 0;
@@ -567,7 +566,6 @@ class ModbusMasterUdp {
    */
   private function writeMultipleRegisterPacketBuilder($unitId, $reference, $data, $dataTypes){
     $dataLen = 0;
-    $endianness = 0;
     // build data section
     $buffer1 = "";
     foreach($data as $key=>$dataitem) {
@@ -576,11 +574,11 @@ class ModbusMasterUdp {
         $dataLen += 2;
       }
       elseif($dataTypes[$key]=="DINT"){
-        $buffer1 .= iecType::iecDINT($dataitem, $endianness);   // register values x
+        $buffer1 .= iecType::iecDINT($dataitem, $this->endianness);   // register values x
         $dataLen += 4;
       }
       elseif($dataTypes[$key]=="REAL") {
-        $buffer1 .= iecType::iecREAL($dataitem, $endianness);   // register values x
+        $buffer1 .= iecType::iecREAL($dataitem, $this->endianness);   // register values x
         $dataLen += 4;
       }       
       else{
@@ -690,7 +688,6 @@ class ModbusMasterUdp {
    */
   private function readWriteRegistersPacketBuilder($unitId, $referenceRead, $quantity, $referenceWrite, $data, $dataTypes){
     $dataLen = 0;
-    $endianness = 0;
     // build data section
     $buffer1 = "";
     foreach($data as $key => $dataitem) {
@@ -699,11 +696,11 @@ class ModbusMasterUdp {
         $dataLen += 2;
       }
       elseif($dataTypes[$key]=="DINT"){
-        $buffer1 .= iecType::iecDINT($dataitem, $endianness);   // register values x
+        $buffer1 .= iecType::iecDINT($dataitem, $this->endianness);   // register values x
         $dataLen += 4;
       }
       elseif($dataTypes[$key]=="REAL") {
-        $buffer1 .= iecType::iecREAL($dataitem, $endianness);   // register values x
+        $buffer1 .= iecType::iecREAL($dataitem, $this->endianness);   // register values x
         $dataLen += 4;
       }       
       else{
