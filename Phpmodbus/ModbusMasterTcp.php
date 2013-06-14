@@ -18,11 +18,11 @@
 require_once dirname(__FILE__) . '/ModbusMaster.php'; 
 
 /**
- * ModbusMasterUdp
+ * ModbusMasterTcp
  *
- * This class deals with the MODBUS master using UDP stack.
+ * This class deals with the MODBUS master using TCP. Extends ModbusMaster class.
  *  
- * Implemented MODBUS master functions:
+ * Implemented MODBUS functions:
  *   - FC  1: read coils
  *   - FC  3: read multiple registers
  *   - FC 15: write multiple coils 
@@ -34,17 +34,16 @@ require_once dirname(__FILE__) . '/ModbusMaster.php';
  * @package Phpmodbus  
  *
  */
-class ModbusMasterUdp extends ModbusMaster {
-  
+class ModbusMasterTcp extends ModbusMaster {
   /**
-   * ModbusMasterUdp
+   * ModbusMasterTcp
    *
    * This is the constructor that defines {@link $host} IP address of the object. 
    *     
-   * @param String $host An IP address of a Modbus UDP device. E.g. "192.168.1.1".
+   * @param String $host An IP address of a Modbus TCP device. E.g. "192.168.1.1".
    */         
-  function ModbusMasterUdp($host){
+  function ModbusMasterTcp($host){
     $this->host = $host;
-    $this->socket_protocol = "UDP";    
+    $this->socket_protocol = "TCP";
   }
 }

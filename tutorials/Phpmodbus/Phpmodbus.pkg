@@ -7,7 +7,7 @@
   <author>
    Jan Krakora
    <authorblurb>
-    {@link mailto:jak.krakora@wago.com email}
+    {@link mailto:krakora.jan@googlemail.com email}
    </authorblurb>
   </author>
  </refsynopsisdiv>
@@ -16,7 +16,7 @@
   <title>Introduction</title>
   <para>
    Phpmodbus is a PHP library for the Modbus protocol. The library implements
-   Modbus UDP master class with subset of the most used Modbus commands.
+   Modbus TCP/UDP master class with subset of the most used Modbus commands.
   </para>
   <para>
    The library implements:
@@ -36,8 +36,8 @@
    Developed with support of <graphic fileref="wago_logo.png"/> {@link http://www.wago.com}.
   </note>
  </refsect1>
- <refsect1 id="{@id intro}">
-  <title>Installation</title>
+ <refsect1 id="{@id install}">
+  <title>Install</title>
   <para>
    At the first, it is supposed an PHP solution has been already installed on
    your server (LAMP, WAMP, MSS+CGI etc.).
@@ -48,14 +48,20 @@
   <para>
    Create a PHP script and assign the library using require_once() command
      <programlisting role="c">
-      <![CDATA[require_once dirname(__FILE__) . '/Phpmodbus/ModbusMasterUdp.php'; ]]>
-     </programlisting>
+      <![CDATA[require_once dirname(__FILE__) . '/Phpmodbus/ModbusMaster.php'; ]]>
+     </programlisting>     
   </para>
   <para>
-    To create the Modbus master object communicating to the 192.168.1.1 modbus slave 
-    at IP address 192.168.1.1 write
+    To create UDP Modbus master object communicating to an modbus slave 
+    e.g. at IP address 192.168.1.1 write
     <programlisting role="c" linenumbering="numbered" startinglinenumber="2">
-      <![CDATA[ $modbus = new ModbusMasterUdp("192.168.1.1"); ]]>
+      <![CDATA[ $modbus = new ModbusMaster("192.168.1.1", "UDP"); ]]>
+    </programlisting>
+  </para>
+  <para>
+    To create TCP Modbus master use
+    <programlisting role="c" linenumbering="numbered" startinglinenumber="2">
+      <![CDATA[ $modbus = new ModbusMaster("192.168.1.1", "TCP"); ]]>
     </programlisting>
   </para>
   <para>
@@ -83,7 +89,7 @@ catch (Exception $e) {
   <para>
   For other examples see sections bellow.
   </para>
- </refsect1>
+ </refsect1>  
  <refsect1 id="{@id examples}">
   <title>Examples</title>
   <para>
@@ -153,4 +159,15 @@ catch (Exception $e) {
     </para>
   </refsect2>
  </refsect1> 
+ <refsect1 id="{@id back_comp}">
+  <title>Back compatibility</title>
+  <para>
+   This version is back compatible to the last versions. Just use  
+   <programlisting role="c">
+      <![CDATA[require_once dirname(__FILE__) . '/Phpmodbus/ModbusMasterUdp.php';
+$modbus = new ModbusMasterUdp("192.168.1.1"); 
+// ... ]]>
+     </programlisting>
+  </para>
+ </refsect1>
 </refentry>

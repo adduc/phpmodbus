@@ -3,8 +3,8 @@ require_once dirname(__FILE__) . '/../../Phpmodbus/ModbusMasterUdp.php';
 require_once dirname(__FILE__) . '/../config.php';
 
 // Create Modbus object
-$modbus = new ModbusMasterUdp($testip);
-$modbus->client = "192.192.15.133";
+$modbus = new ModbusMasterUdp($test_host_ip);
+$modbus->client = $test_bind_client_ip;
 
 // Data to be writen
 $data = array(1000, 2000, 1.250, 1.250);
