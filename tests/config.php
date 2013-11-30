@@ -1,3 +1,3 @@
 <?php
-  $test_host_ip = "192.168.1.105";  
-  $test_bind_client_ip = "192.168.1.106";
+  $test_host_ip = "192.192.1.10";  
+  $test_bind_client_ip = "192.192.1.100";

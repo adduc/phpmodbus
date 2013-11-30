@@ -24,6 +24,8 @@
      <listitem><para>FC  1: read multiple coils</para></listitem>
      <listitem><para>FC  2: read input discretes</para></listitem>
      <listitem><para>FC  3: read multiple registers</para></listitem>
+     <listitem><para>FC  4: read multiple input registers</para></listitem>
+     <listitem><para>FC  5: write single coil</para></listitem>
      <listitem><para>FC  6: write single register</para></listitem>
      <listitem><para>FC 15: write multiple coils</para></listitem>
      <listitem><para>FC 16: write multiple registers</para></listitem>
@@ -119,6 +121,24 @@ catch (Exception $e) {
     </para>
     <para>
     {@example example_fc3.php}
+    </para>
+  </refsect2>
+  <refsect2 id="{@id example_fc4}">
+    <title>FC4 - read multiple input registers </title>
+    <para>
+      FC4 functionality example
+    </para>
+    <para>
+    {@example example_fc4.php}
+    </para>
+  </refsect2>
+  <refsect2 id="{@id example_fc5}">
+    <title>FC5 - write single coil</title>
+    <para>
+      FC5 functionality example
+    </para>
+    <para>
+    {@example example_fc5.php}
     </para>
   </refsect2>
   <refsect2 id="{@id example_fc6}">
