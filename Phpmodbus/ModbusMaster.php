@@ -32,6 +32,7 @@ require_once dirname(__FILE__) . '/PhpType.php';
  *   - FC  6: write single register
  *   - FC 15: write multiple coils
  *   - FC 16: write multiple registers
+ *   - FC 22: mask write register
  *   - FC 23: read write registers
  *   
  * @author Jan Krakora
