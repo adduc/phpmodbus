@@ -16,6 +16,7 @@ Features
     * FC6 - Write single register
     * FC15 - Write multiple coils
     * FC16 - Write multiple registers
+    * FC22 - Mask Write register
     * FC23 - Read/Write multiple registers
 
 Example
