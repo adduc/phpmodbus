@@ -32,6 +32,7 @@ require_once dirname(__FILE__) . '/PhpType.php';
  *   - FC  6: write single register
  *   - FC 15: write multiple coils
  *   - FC 16: write multiple registers
+ *   - FC 22: mask write register
  *   - FC 23: read write registers
  *   
  * @author Jan Krakora
@@ -1048,6 +1049,106 @@ class ModbusMaster {
     $this->responseCode($packet);
     return true;
   }
+
+
+  /**
+   * maskWriteRegister
+   *
+   * Modbus function FC22(0x16) - Mask Write Register.
+   *
+   * This function alter single bit(s) at {@link $reference} position of
+   * memory of a Modbus device given by {@link $unitId}.
+   *
+   * Result = (Current Contents AND And_Mask) OR (Or_Mask AND (NOT And_Mask))
+   *
+   * @param int $unitId usually ID of Modbus device
+   * @param int $reference Reference in the device memory (e.g. in device WAGO 750-841, memory MW0 starts at address 12288)
+   * @param int $andMask
+   * @param int $orMask 
+   * @return bool Success flag
+   */
+  function maskWriteRegister($unitId, $reference, $andMask, $orMask){
+    $this->status .= "maskWriteRegister: START\n";
+    // connect
+    $this->connect();
+    // send FC22
+    $packet = $this->maskWriteRegisterPacketBuilder($unitId, $reference, $andMask, $orMask);
+    $this->status .= $this->printPacket($packet);
+    $this->send($packet);
+    // receive response
+    $rpacket = $this->rec();
+    $this->status .= $this->printPacket($rpacket);
+    // parse packet
+    $this->maskWriteRegisterParser($rpacket);
+    // disconnect
+    $this->disconnect();
+    $this->status .= "maskWriteRegister: DONE\n";
+    return true;
+  }
+
+
+  /**
+   * fc22
+   *
+   * Alias to {@link maskWriteRegister} method
+   *
+   * @param int $unitId
+   * @param int $reference
+   * @param int $andMask
+   * @param int $orMask
+   * @return bool
+   */
+  function fc22($unitId, $reference, $andMask, $orMask){
+    return $this->maskWriteRegister($unitId, $reference, $andMask, $orMask);
+  }
+
+
+  /**
+   * maskWriteRegisterPacketBuilder
+   *
+   * Packet builder FC22 - MASK WRITE register
+   *
+   * @param int $unitId
+   * @param int $reference
+   * @param int $andMask
+   * @param int $orMask
+   * @return string
+   */
+  private function maskWriteRegisterPacketBuilder($unitId, $reference, $andMask, $orMask){
+    $dataLen = 0;
+    // build data section
+    $buffer1 = "";
+    // build body
+    $buffer2 = "";
+    $buffer2 .= iecType::iecBYTE(22);             // FC 22 = 22(0x16)
+    $buffer2 .= iecType::iecINT($reference);      // refnumber = 12288
+    $buffer2 .= iecType::iecINT($andMask);        // AND mask
+    $buffer2 .= iecType::iecINT($orMask);     	  // OR mask
+    $dataLen += 7;
+    // build header
+    $buffer3 = '';
+    $buffer3 .= iecType::iecINT(rand(0,65000));   // transaction ID
+    $buffer3 .= iecType::iecINT(0);               // protocol ID
+    $buffer3 .= iecType::iecINT($dataLen + 1);    // lenght
+    $buffer3 .= iecType::iecBYTE($unitId);        //unit ID
+    // return packet string
+    return $buffer3. $buffer2. $buffer1;
+  }
+
+
+  /**
+   * maskWriteRegisterParser
+   *
+   * FC22 response parser
+   *
+   * @param string $packet
+   * @return bool
+   */
+  private function maskWriteRegisterParser($packet){
+    $this->responseCode($packet);
+    return true;
+  }
+
 
   /**
    * readWriteRegisters
