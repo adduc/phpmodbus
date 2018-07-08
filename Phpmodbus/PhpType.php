@@ -229,21 +229,36 @@ class PhpType {
      * @param bool $endianness
      * @return int
      */
-    private static function combineBytes($data, $endianness) {
-        $value = 0;
-        // Combine bytes
-        if ($endianness == 0)
-            $value = (($data[3] & 0xFF)<<16) |
-                    (($data[2] & 0xFF)<<24) |
-                    (($data[1] & 0xFF)) |
-                    (($data[0] & 0xFF)<<8);
-        else
-            $value = (($data[3] & 0xFF)<<24) |
-                    (($data[2] & 0xFF)<<16) |
-                    (($data[1] & 0xFF)<<8) |
-                    (($data[0] & 0xFF));
-
-        return $value;
-    }
+	private static function combineBytes($data, $endianness) {
+		$value = 0;
+		// Combine bytes
+		switch($endianness) {
+			case 1:
+				$value = (($data[3] & 0xFF)<<24) |
+					(($data[2] & 0xFF)<<16) |
+					(($data[1] & 0xFF)<<8) |
+					(($data[0] & 0xFF));
+				break;
+			case 2:
+				$value = (($data[1] & 0xFF)<<24) |
+					(($data[0] & 0xFF)<<16) |
+					(($data[3] & 0xFF)<<8) |
+					(($data[2] & 0xFF));
+				break;
+			case 4:
+				$value = (($data[0] & 0xFF)<<24) |
+					(($data[1] & 0xFF)<<16) |
+					(($data[2] & 0xFF)<<8) |
+					(($data[3] & 0xFF));
+				break;
+			default:
+				$value = (($data[2] & 0xFF)<<24) |
+					(($data[3] & 0xFF)<<16) |
+					(($data[0] & 0xFF)<<8) |
+					(($data[1] & 0xFF));
+				break;
+		}
+		return $value;
+	}
 }
 ?>
